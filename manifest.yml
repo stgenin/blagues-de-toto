@@ -1,0 +1,23 @@
+modules:
+  jira:adminPage:
+    - key: blagues-de-toto-hello-world-admin-page
+      resource: main
+      resolver:
+        function: resolver
+      render: native
+      title: blagues-de-toto
+  function:
+    - key: resolver
+      handler: index.handler
+resources:
+  - key: main
+    path: src/frontend/index.jsx
+app:
+  runtime:
+    name: nodejs22.x
+    memoryMB: 256
+    architecture: arm64
+  id: ari:cloud:ecosystem::app/948a8c18-de5c-4095-89e0-ad927f3ebb14
+permissions:
+  scopes:
+    - storage:app
