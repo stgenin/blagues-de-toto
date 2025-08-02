@@ -1,14 +1,23 @@
 modules:
   jira:adminPage:
-    - key: blagues-de-toto-hello-world-admin-page
+    - key: blagues-de-toto-admin-page
       resource: main
       resolver:
         function: resolver
       render: native
-      title: blagues-de-toto
+      title: Blagues de Toto
+  trigger:
+    - key: onIssueCreated
+      function: issue-created
+      events:
+        - avi:jira:created:issue
+      filter:
+        ignoreSelf: false
   function:
     - key: resolver
-      handler: index.handler
+      handler: index.handler 
+    - key: issue-created
+      handler: index.issueCreatedHandler      
 resources:
   - key: main
     path: src/frontend/index.jsx
@@ -21,3 +30,5 @@ app:
 permissions:
   scopes:
     - storage:app
+    - read:jira-work
+    - write:jira-work
