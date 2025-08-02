@@ -1,69 +1,99 @@
 import React, { useEffect, useState } from 'react';
-import ForgeReconciler, { Text, Textfield, Form, Button } from '@forge/react';
+import ForgeReconciler, {
+  Form,
+  FormFooter,
+  Box,
+  Inline,
+  Text,
+  Textfield,
+  Button,
+  xcss
+} from '@forge/react';
 import { invoke } from '@forge/bridge';
+
 const App = () => {
-  const [customField, setCustomField] = useState(null);
-  const [openAPIKey, setOpenAPIKey] = useState(null);
+  const [customField, setCustomField] = useState('');
+  const [openAPIKey, setOpenAPIKey] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ customField: '', openAPIKey: '' });
 
-useEffect(() => {
-    const fetchData = async () => {
-      const cf = await invoke('getCFValue', { example: 'my-invoke-variable' });
-      const key = await invoke('getAPIKeyValue', { example: 'my-invoke-variable' });
-      setCustomField(cf);
-      setOpenAPIKey(key);
-      setFormData({ customField: cf, openAPIKey: key });
-    };
-    fetchData();
+  useEffect(() => {
+    (async () => {
+      const cf = await invoke('getCFValue');
+      const key = await invoke('getAPIKeyValue');
+      setCustomField(cf || '');
+      setOpenAPIKey(key || '');
+      setFormData({ customField: cf || '', openAPIKey: key || '' });
+    })();
   }, []);
 
   const handleSubmit = async () => {
     if (isEditing) {
       await invoke('saveParams', {
         customField: formData.customField,
-        openAPIKey: formData.openAPIKey,
+        openAPIKey: formData.openAPIKey
       });
       setCustomField(formData.customField);
       setOpenAPIKey(formData.openAPIKey);
     }
-    setIsEditing(!isEditing);
+    setIsEditing(prev => !prev);
+  };
+
+  const containerStyle = xcss({
+    maxWidth: '500px',
+    marginInlineStart: 'auto',
+    marginInlineEnd: 'auto',
+    padding: 'space.150'
+  });
+
+  const rowStack = xcss({
+    display: 'grid',
+    gap: 'space.100'
+  });
+
+  const cellInline = {
+    alignBlock: 'center',
+    space: 'space.050'
   };
 
   return (
-    <>
+    <Box xcss={containerStyle}>
       <Form onSubmit={handleSubmit}>
-      {isEditing ? (
-        <>
-          <Text>CustomField : </Text>
-          <Textfield
-            label="CustomField"
-            value={formData.customField}
-            onChange={(e) => setFormData({ ...formData, customField: e.target.value })}
-          />
-          <Text>OpenAPI Key : </Text>
-          <Textfield
-            label="OpenAPI Key"
-            type="password"
-            value={formData.openAPIKey}
-            onChange={(e) => setFormData({ ...formData, openAPIKey: e.target.value })}
-          />
-        </>
-      ) : (
-        <>
-          <Text>CustomField : {customField ?? 'Loading...'}</Text>
-          <Text>OpenAPI Key : {openAPIKey ? '*'.repeat(openAPIKey.length) : 'Loading...'}</Text>
-        </>
-      )}
-      <Button appearance="primary" type="submit">
-        {isEditing ? 'Save' : 'Edit'}
-      </Button>
+        <Box xcss={rowStack}>
+          <Inline {...cellInline}>
+            <Text>CustomField:&nbsp;</Text>
+            {isEditing ? (
+              <Textfield
+                defaultValue={formData.customField}
+                onChange={e => setFormData({ ...formData, customField: e.target.value })}
+              />
+            ) : (
+              <Text>{customField || 'Loading...'}</Text>
+            )}
+          </Inline>
+
+          <Inline {...cellInline}>
+            <Text>OpenAPI Key:&nbsp;</Text>
+            {isEditing ? (
+              <Textfield
+                type="password"
+                defaultValue={formData.openAPIKey}
+                onChange={e => setFormData({ ...formData, openAPIKey: e.target.value })}
+              />
+            ) : (
+              <Text>{openAPIKey ? '•'.repeat(openAPIKey.length) : 'Loading...'}</Text>
+            )}
+          </Inline>
+        </Box>
+
+        <FormFooter align="end">
+          <Button appearance="primary" type="submit">
+            {isEditing ? 'Save' : 'Edit'}
+          </Button>
+        </FormFooter>
       </Form>
-    </>
+    </Box>
   );
 };
-ForgeReconciler.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+
+ForgeReconciler.render(<App />);
