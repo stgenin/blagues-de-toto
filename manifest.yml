@@ -17,7 +17,7 @@ app:
     name: nodejs22.x
     memoryMB: 256
     architecture: arm64
-  id: ari:cloud:ecosystem::app/948a8c18-de5c-4095-89e0-ad927f3ebb14
+  id: ari:cloud:ecosystem::app/c0115e9e-7c34-49d6-a782-541492552cf5
 permissions:
   scopes:
     - storage:app

@@ -8,7 +8,7 @@ resolver.define('getCFValue', async (req) => {
   try {
       const stored = await kvs.get('customField');
       if (stored === undefined) {
-        return '';
+        return 'undefined';
       }
       return stored;
   } catch (err) {
@@ -17,7 +17,7 @@ resolver.define('getCFValue', async (req) => {
     // Lorsque api retourne NOT_FOUND dans l'en-tête, ne pas propager
     const errCode = err?.code || err?.error?.code;
     if (errCode === 'NOT_FOUND') {
-      return defaultValue;
+      return 'undefined';
     }
     throw err;
   }
@@ -26,9 +26,9 @@ resolver.define('getCFValue', async (req) => {
 resolver.define('getAPIKeyValue', async (req) => {
     console.log(req);
   try {
-      const stored = await kvs.get('openAPIKey');
+      const stored = await kvs.getSecret('openAPIKey');
       if (stored === undefined) {
-        return '';
+        return 'undefined';
       }
       return stored;
   } catch (err) {
@@ -37,7 +37,7 @@ resolver.define('getAPIKeyValue', async (req) => {
     // Lorsque api retourne NOT_FOUND dans l'en-tête, ne pas propager
     const errCode = err?.code || err?.error?.code;
     if (errCode === 'NOT_FOUND') {
-      return defaultValue;
+      return 'undefined';
     }
     throw err;
   }
@@ -50,7 +50,7 @@ resolver.define('saveParams', async ({ payload }) => {
   console.log('Saving customField:', customField);
   console.log('Saving openAPIKey:', openAPIKey);
   kvs.set('customField',customField);
-  kvs.set('openAPIKey',openAPIKey);
+  kvs.setSecret('openAPIKey',openAPIKey);
   return true;
 });
 

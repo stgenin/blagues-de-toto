@@ -35,11 +35,13 @@ useEffect(() => {
       <Form onSubmit={handleSubmit}>
       {isEditing ? (
         <>
+          <Text>CustomField : </Text>
           <Textfield
             label="CustomField"
             value={formData.customField}
             onChange={(e) => setFormData({ ...formData, customField: e.target.value })}
           />
+          <Text>OpenAPI Key : </Text>
           <Textfield
             label="OpenAPI Key"
             type="password"
