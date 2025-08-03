@@ -15,9 +15,9 @@ modules:
         ignoreSelf: false
   function:
     - key: resolver
-      handler: index.handler 
+      handler: index.handler
     - key: issue-created
-      handler: index.issueCreatedHandler      
+      handler: index.issueCreatedHandler
 resources:
   - key: main
     path: src/frontend/index.jsx
@@ -32,3 +32,7 @@ permissions:
     - storage:app
     - read:jira-work
     - write:jira-work
+  external:
+    fetch:
+      backend:
+        - address: api.openai.com

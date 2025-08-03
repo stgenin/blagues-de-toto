@@ -4,7 +4,7 @@ import { kvs } from '@forge/kvs';
 const resolver = new Resolver();
 
 resolver.define('getCFValue', async (req) => {
-  console.log(req);
+  // console.log(req);
   try {
       const stored = await kvs.get('customField');
       if (stored === undefined) {
@@ -48,7 +48,7 @@ resolver.define('saveParams', async ({ payload }) => {
 
   // Logique pour sauvegarder les données...
   console.log('Saving customField:', customField);
-  console.log('Saving openAPIKey:', openAPIKey);
+  // console.log('Saving openAPIKey:', openAPIKey);
   kvs.set('customField',customField);
   kvs.setSecret('openAPIKey',openAPIKey);
   return true;
