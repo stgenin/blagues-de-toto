@@ -136,7 +136,8 @@ export async function getIssueDescription(issueKey) {
   const lines = extractTextLinesADF(adf.content);
 
   // Reconstitue une chaîne avec retour à la ligne entre chaque fragment
-  return lines.join('\n');
+  const plaintext=lines.join("\n");
+  return plaintext.replace(/\r?\n\s*\r?\n+/g, "\n");
 }
 
 export async function callOpenAI (issueDescription, openAPIKey) {
