@@ -7,7 +7,7 @@ export async function issueCreatedHandler (event, context) {
   const customFieldValue = await getCustomFieldValue();
   const openAPIKey = await getAPIKeyValue();
   console.log('La valeur du customfield est ' + customFieldValue);
-  console.log('La valeur de la clé API est ' + openAPIKey);
+  // console.log('La valeur de la clé API est ' + openAPIKey);
 
   const issueDescription = await getIssueDescription(event.issue.key);
 
