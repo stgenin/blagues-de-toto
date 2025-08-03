@@ -7,9 +7,14 @@ import ForgeReconciler, {
   Text,
   Textfield,
   Button,
-  xcss
+  xcss,
+  Table,
+  Row,
+  Cell,
+  Image,
 } from '@forge/react';
 import { invoke } from '@forge/bridge';
+import logo from './BlaguesDeToto.png';
 
 const App = () => {
   const [customField, setCustomField] = useState('');
@@ -40,13 +45,16 @@ const App = () => {
   };
 
   const containerStyle = xcss({
+    display: 'flex',
+    alignItems: 'center',
     maxWidth: '500px',
     marginInlineStart: 'auto',
     marginInlineEnd: 'auto',
+    justifyContent: 'center',
     padding: 'space.150'
   });
 
-  const rowStack = xcss({
+  const rowStyle = xcss({
     display: 'grid',
     gap: 'space.100'
   });
@@ -56,39 +64,83 @@ const App = () => {
     space: 'space.050'
   };
 
-  return (
+  const container = xcss({
+    maxWidth: "500px",
+    marginInlineStart: "auto",
+    marginInlineEnd: "auto",
+    padding: "space.150",
+  });
+
+  const tableCss = xcss({
+    width: "100%",
+    border: "none", // simplifie le rendu
+  });
+
+  const cellLabel = xcss({
+    fontWeight: "bold",
+    width: "40%",
+  });
+
+  const cellValue = xcss({
+    width: "60%",
+  });
+
+  const headerImageStyle = xcss({
+    width: '100%',
+    maxWidth: '250px',
+    marginBlockEnd: 'space.150',
+  });
+
+    return (
     <Box xcss={containerStyle}>
+      <Image
+        src={logo} alt="Image d'illustration"
+        xcss={headerImageStyle}
+      />
+
       <Form onSubmit={handleSubmit}>
-        <Box xcss={rowStack}>
-          <Inline {...cellInline}>
-            <Text>CustomField:&nbsp;</Text>
+        {/* Ligne CustomField */}
+        <Inline xcss={rowStyle}>
+          <Box xcss={cellLabel}>
+            <Text>ID du customField :</Text>
+          </Box>
+          <Box xcss={cellValue}>
             {isEditing ? (
               <Textfield
                 defaultValue={formData.customField}
-                onChange={e => setFormData({ ...formData, customField: e.target.value })}
+                onChange={(e) =>
+                  setFormData((fd) => ({ ...fd, customField: e.target.value }))
+                }
               />
             ) : (
-              <Text>{customField || 'Loading...'}</Text>
+              <Text>{customField || '—'}</Text>
             )}
-          </Inline>
+          </Box>
+        </Inline>
 
-          <Inline {...cellInline}>
-            <Text>OpenAPI Key:&nbsp;</Text>
+        {/* Ligne Clé OpenAI */}
+        <Inline xcss={rowStyle}>
+          <Box xcss={cellLabel}>
+            <Text>Clé OpenAI :</Text>
+          </Box>
+          <Box xcss={cellValue}>
             {isEditing ? (
               <Textfield
                 type="password"
                 defaultValue={formData.openAPIKey}
-                onChange={e => setFormData({ ...formData, openAPIKey: e.target.value })}
+                onChange={(e) =>
+                  setFormData((fd) => ({ ...fd, openAPIKey: e.target.value }))
+                }
               />
             ) : (
-              <Text>{openAPIKey ? '•'.repeat(openAPIKey.length) : 'Loading...'}</Text>
+              <Text>{openAPIKey ? '•'.repeat(openAPIKey.length) : '—'}</Text>
             )}
-          </Inline>
-        </Box>
+          </Box>
+        </Inline>
 
-        <FormFooter align="end">
+        <FormFooter align="end" marginTop="space.150">
           <Button appearance="primary" type="submit">
-            {isEditing ? 'Save' : 'Edit'}
+            {isEditing ? 'Enregistrer' : 'Modifier'}
           </Button>
         </FormFooter>
       </Form>
